@@ -20,9 +20,9 @@
 //! - Validator configuration and cryptographic keys
 
 use crate::{
-    context::{BasePeerAddress, BasePeerSet, MalachiteContext},
+    context::{BasePeer, BasePeerAddress, BasePeerSet, MalachiteContext},
     height::Height,
-    provider::Ed25519Provider,
+    provider::{Ed25519Provider, PublicKey},
     store::{DecidedValue, Store},
     types::{Address, ValueId},
     utils::seed_from_address,
@@ -322,11 +322,38 @@ impl State {
     /// Returns the validator set for the given height
     /// For now, returns a fixed validator set from genesis
     pub fn get_validator_set(&self, _height: Height) -> BasePeerSet {
-        // For now, return a simple validator set based on genesis
-        // In a real implementation, this would query the actual validator set
+        // Convert genesis validators to BasePeer format
+        let peers: Vec<BasePeer> = self
+            .genesis
+            .validators
+            .iter()
+            .map(|validator| {
+                // Convert the public key bytes to Ed25519 PublicKey
+                if validator.public_key.len() != 32 {
+                    panic!(
+                        "Invalid public key length for validator {}: expected 32 bytes, got {}",
+                        validator.address,
+                        validator.public_key.len()
+                    );
+                }
+                let mut key_bytes = [0u8; 32];
+                key_bytes.copy_from_slice(&validator.public_key);
+                let public_key = PublicKey::from_bytes(key_bytes);
+
+                BasePeer {
+                    address: BasePeerAddress::new(validator.address),
+                    public_key,
+                    voting_power: validator.voting_power,
+                }
+            })
+            .collect();
+
+        // Calculate total voting power
+        let total_voting_power = peers.iter().map(|p| p.voting_power).sum();
+
         BasePeerSet {
-            peers: vec![],
-            total_voting_power: 0,
+            peers,
+            total_voting_power,
         }
     }
 
