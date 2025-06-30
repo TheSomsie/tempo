@@ -4,3 +4,26 @@ The goal of this app is to integrate the Reth execution library and the Malachit
 ## Documentation
 
 - [Architecture Overview](docs/malachite-reth-interactions.md) - High-level overview of the Malachite-Reth integration
+
+## Testing
+
+### End-to-End Testing Framework
+
+The project includes a comprehensive e2e testing framework located in the `./testnet` directory. This framework allows you to:
+
+- Spin up local test networks with configurable node counts
+- Run automated tests to verify consensus and block production
+- Monitor network health and debug issues
+- Test different network topologies and configurations
+
+For detailed instructions on using the e2e testing framework, see the [Testnet README](./testnet/README.md).
+
+Quick start:
+```bash
+# Launch a 3-node test network
+cd testnet
+./spawn.sh
+
+# Run automated e2e test
+./scripts/e2e_test.sh
+```

@@ -58,7 +58,8 @@ testnet/
 ├── scripts/
 │   ├── generate_keys.sh # Generate validator keys
 │   ├── generate_genesis.sh # Create genesis file
-│   └── monitor.sh       # Real-time network monitoring
+│   ├── monitor.sh       # Real-time network monitoring
+│   └── e2e_test.sh      # End-to-end testing script
 └── nodes/               # Runtime directory (created on launch)
     ├── node0/
     ├── node1/
@@ -146,6 +147,26 @@ curl -X POST http://localhost:8545 \
 - Normal during initial sync
 - Check metrics for excessive message rates
 - Consider increasing block time
+
+## End-to-End Testing
+
+The testnet includes an automated e2e test script that verifies the network can produce blocks successfully:
+
+```bash
+# Run e2e test with default settings (3 nodes, block 100, 15 min timeout)
+./scripts/e2e_test.sh
+
+# Run with custom parameters
+./scripts/e2e_test.sh 4 200 1800  # 4 nodes, target block 200, 30 min timeout
+
+# The script will:
+# 1. Start a fresh network
+# 2. Monitor block progression
+# 3. Verify all nodes reach the target block
+# 4. Exit with success or timeout
+```
+
+This is useful for CI/CD pipelines and automated testing.
 
 ## Advanced Usage
 
