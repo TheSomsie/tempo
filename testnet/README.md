@@ -76,7 +76,6 @@ Each node uses the following ports (base + node_id):
 | Metrics | 9000 | 9000 | 9001 | 9002 | 9003 |
 | Reth P2P | 30303 | 30303 | 30304 | 30305 | 30306 |
 | Reth HTTP RPC | 8545 | 8545 | 8546 | 8547 | 8548 |
-| Engine API | 8551 | 8551 | 8552 | 8553 | 8554 |
 
 ## Monitoring
 
